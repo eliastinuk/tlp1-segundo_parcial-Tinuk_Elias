@@ -34,3 +34,32 @@ app.post('/books', (req, res) => {
     res.status(201).json(newBook);
 });
 
+// este es el put para actualizar los datos
+app.put('/books/:id', (req, res) => {
+    const book = books.find(b => b.id === parseInt(req.params.id));
+    if (!book) {
+        return res.status(404).send('el libro no se encontró');
+    }
+
+    const { title, author, year } = req.body;
+    if (title) book.title = title;
+    if (author) book.author = author;
+    if (year) book.year = year;
+
+    res.json(book);
+});
+
+// este es el delete para eliminar un libro
+app.delete('/books/:id', (req, res) => {
+    const index = books.findIndex(b => b.id === parseInt(req.params.id));
+    if (index === -1) {
+        return res.status(404).send('el libro no se encontró');
+    }
+
+    books.splice(index, 1);
+    res.status(204).send();
+});
+
+app.listen(port, () => {
+    console.log(`Servidor escuchando en http://localhost:${port}`);
+});
